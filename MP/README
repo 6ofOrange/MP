@@ -1,0 +1,48 @@
+# Multi-task LSTM for Population-Relevant Air Pollution Prediction
+
+This repository provides the implementation of a distributed multi-task
+Long Short-Term Memory (LSTM) model for predicting six major air pollutants
+(PM2.5, PM10, CO, NO2, SO2, and O3) using meteorological and reanalysis inputs.
+
+The framework is designed for large-scale spatiotemporal datasets and
+supports distributed training with PyTorch Distributed Data Parallel (DDP).
+
+## Key Features
+- Multi-task learning with a shared LSTM backbone
+- Pollutant-specific task heads
+- Distributed training on multi-GPU systems
+- Chunk-wise data loading for memory efficiency
+- Compatible with population-weighted exposure assessment
+
+## Project Structure
+```text
+src/
+  models/        Neural network architectures
+  data/          Data loading and preprocessing
+  train/         Training and evaluation logic
+  utils/         Utilities (DDP, logging, plotting)
+
+Data Description
+
+Meteorological inputs are stored as hourly .npy files.
+Ground-based air pollution observations are provided as station-level CSV files.
+Each grid cell is matched to the nearest monitoring station.
+
+
+Training
+
+torchrun --nproc_per_node=4 src/main.py
+
+Output
+
+Trained multi-task model weights (.pth)
+
+Training loss curves for overall and task-specific losses
+
+Evaluation metrics (R² and RMSE) for each pollutant
+
+Reproducibility
+
+Random seeds are fixed where applicable.
+All preprocessing scalers are loaded from serialized joblib objects.
+
